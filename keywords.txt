@@ -12,6 +12,7 @@ Debug	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+setFormat               KEYWORD2
 setDebugLevel	        KEYWORD2
 setDebugOutputStream	KEYWORD2
 timestampOn	            KEYWORD2

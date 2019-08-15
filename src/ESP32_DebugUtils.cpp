@@ -7,6 +7,7 @@
 
 static int const DEFAULT_DEBUG_LEVEL   = DBG_INFO;
 static Stream *  DEFAULT_OUTPUT_STREAM = &Serial;
+static char * DEFAULT_FORMAT = "%A, %B %d %Y %H:%M:%S";
 
 /******************************************************************************
    CTOR/DTOR
@@ -16,11 +17,16 @@ ESP32_DebugUtils::ESP32_DebugUtils() {
   timestampOff();
   setDebugLevel(DEFAULT_DEBUG_LEVEL);
   setDebugOutputStream(DEFAULT_OUTPUT_STREAM);
+  setFormat(DEFAULT_FORMAT);
 }
 
 /******************************************************************************
    PUBLIC MEMBER FUNCTIONS
  ******************************************************************************/
+
+void ESP32_DebugUtils::setFormat(char * format) {
+  _format = format;
+}
 
 void ESP32_DebugUtils::setDebugLevel(int const debug_level) {
   _debug_level = debug_level;
@@ -46,7 +52,7 @@ void ESP32_DebugUtils::print(int const debug_level, const char * fmt, ...) {
       struct tm timeinfo;
       char timestamp[50];
       getLocalTime(&timeinfo);
-      strftime(timestamp, sizeof(timestamp), "%A, %B %d %Y %H:%M:%S", &timeinfo);
+      strftime(timestamp, sizeof(timestamp), _format, &timeinfo);
       _debug_output_stream->print(timestamp);
     }
 

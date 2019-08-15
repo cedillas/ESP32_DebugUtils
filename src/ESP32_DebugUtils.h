@@ -1,6 +1,9 @@
 #ifndef ESP32_DEBUG_UTILS_H_
 #define ESP32_DEBUG_UTILS_H_
 
+/******************************************************************************
+   INCLUDE
+ ******************************************************************************/
 
 #include <Arduino.h>
 #include <stdarg.h>
@@ -26,6 +29,7 @@ class ESP32_DebugUtils {
 
     ESP32_DebugUtils();
 
+    void setFormat(char * format);
     void setDebugLevel(int const debug_level);
 
     void setDebugOutputStream(Stream * stream);
@@ -41,6 +45,7 @@ class ESP32_DebugUtils {
     bool      _timestamp_on;
     int       _debug_level;
     Stream *  _debug_output_stream;
+    char *    _format;
 
     void vPrint(char const * fmt, va_list args);
 
