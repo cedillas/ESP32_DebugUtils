@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include "ESP32_DebugUtils.h"
 
-const char* ssid       = "UniFi";
-const char* password   = "I81b4u8!";
+const char* ssid       = "SSID";
+const char* password   = "PSK";
 
 const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 0;
