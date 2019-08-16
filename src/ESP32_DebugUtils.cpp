@@ -15,9 +15,29 @@ static char * DEFAULT_FORMAT = "%A, %B %d %Y %H:%M:%S";
 
 ESP32_DebugUtils::ESP32_DebugUtils() {
   timestampOff();
+  messageTypeOff();
   setDebugLevel(DEFAULT_DEBUG_LEVEL);
-  setDebugOutputStream(DEFAULT_OUTPUT_STREAM);
   setFormat(DEFAULT_FORMAT);
+  setDebugOutputStream(DEFAULT_OUTPUT_STREAM);
+  clearDebugOutputFile();
+}
+
+ESP32_DebugUtils::ESP32_DebugUtils(File file) {
+  timestampOff();
+  messageTypeOff();
+  setDebugLevel(DEFAULT_DEBUG_LEVEL);
+  setFormat(DEFAULT_FORMAT);
+  clearDebugOutputStream();
+  setDebugOutputFile(file);
+}
+
+ESP32_DebugUtils::ESP32_DebugUtils(Stream * stream) {
+  timestampOff();
+  messageTypeOff();
+  setDebugLevel(DEFAULT_DEBUG_LEVEL);
+  setFormat(DEFAULT_FORMAT);
+  setDebugOutputStream(stream);
+  clearDebugOutputFile();
 }
 
 /******************************************************************************
@@ -34,6 +54,22 @@ void ESP32_DebugUtils::setDebugLevel(int const debug_level) {
 
 void ESP32_DebugUtils::setDebugOutputStream(Stream * stream) {
   _debug_output_stream = stream;
+  _debug_output_stream_enabled = true;
+}
+
+void ESP32_DebugUtils::clearDebugOutputStream() {
+  _debug_output_stream = NULL;
+  _debug_output_stream_enabled = false;
+}
+
+void ESP32_DebugUtils::setDebugOutputFile(File file) {
+  _debug_output_file = file;
+  _debug_output_file_enabled = true;
+}
+
+void ESP32_DebugUtils::clearDebugOutputFile() {
+  //_debug_output_file = NULL;
+  _debug_output_file_enabled = false;
 }
 
 void ESP32_DebugUtils::timestampOn() {
@@ -44,22 +80,39 @@ void ESP32_DebugUtils::timestampOff() {
   _timestamp_on = false;
 }
 
+void ESP32_DebugUtils::messageTypeOn() {
+  _messageType_on = true;
+}
+
+void ESP32_DebugUtils::messageTypeOff() {
+  _messageType_on = false;
+}
+
 void ESP32_DebugUtils::print(int const debug_level, const char * fmt, ...) {
-  if (debug_level >= DBG_ERROR   &&
-      debug_level <= DBG_VERBOSE &&
-      debug_level <= _debug_level) {
-    if (_timestamp_on) {
-      struct tm timeinfo;
-      char timestamp[50];
-      getLocalTime(&timeinfo);
-      strftime(timestamp, sizeof(timestamp), _format, &timeinfo);
-      _debug_output_stream->print(timestamp);
+  if (_debug_output_stream_enabled || _debug_output_file_enabled) {
+    struct tm timeinfo;
+    char timestamp[50];
+    getLocalTime(&timeinfo);
+    
+    if (_debug_output_stream_enabled) {
+      if (debug_level >= DBG_ERROR   &&
+          debug_level <= DBG_VERBOSE &&
+          debug_level <= _debug_level) {
+        if (_timestamp_on) {
+          strftime(timestamp, sizeof(timestamp), _format, &timeinfo);
+          _debug_output_stream->print(timestamp);
+        }
+
+        va_list args;
+        va_start(args, fmt);
+        vPrint(fmt, args);
+        va_end(args);
+      }
     }
 
-    va_list args;
-    va_start(args, fmt);
-    vPrint(fmt, args);
-    va_end(args);
+    if (_debug_output_file_enabled) {
+      // Write to file here
+    }
   }
 }
 
