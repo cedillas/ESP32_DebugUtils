@@ -27,7 +27,6 @@ static int const DBG_VERBOSE =  4;
 class ESP32_DebugUtils {
 
   public:
-
     ESP32_DebugUtils();
     ESP32_DebugUtils(File file);
     ESP32_DebugUtils(Stream *  _debug_output_stream);

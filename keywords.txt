@@ -15,9 +15,14 @@ Debug	KEYWORD1
 setFormat               KEYWORD2
 setDebugLevel	        KEYWORD2
 setDebugOutputStream	KEYWORD2
+clearDebugOutputStream  KEYWORD2
+setDebugOutputFile      KEYWORD2
+clearDebugOutputFile    KEYWORD2
 timestampOn	            KEYWORD2
 timestampOff	        KEYWORD2
 print	                KEYWORD2
+messageTypeOn           KEYWORD2
+messageTypeOff          KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
